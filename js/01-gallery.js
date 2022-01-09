@@ -16,26 +16,63 @@ alt="${description}"
 </a>
 </div>`).join('');
 
-parentEl.innerHTML = markup;
+parentEl.insertAdjacentHTML('beforeend', markup);
 
 
-const onGalleryItem = event => {
-    if (event.target.nodeName !== 'IMG') {
+function onImgContainerClick(event) {
+    if (!event.target.classList.contains("gallery__image")) {
         return;
     }
-    const instance = basicLightbox.create(`
-    <img src="${event.target.dataset.source}" width="800" height="600">
-`).show()
-
-}
-
-const onClickEscape = event => {
-    if (event.key !== 'Escape') {
-        return
+    const instance = basicLightbox.create(
+        `
+        <img src="${event.target.dataset.source}" width="800" height="600">
+        `,
+        {
+            onShow: (instance) => {
+                window.addEventListener("keydown", onClickEscape);
+            },
+            onClose: (instance) =>
+            window.removeEventListener("keydown", onClickEscape),
+        }
+        );
+        const onClickEscape = (event) => {
+            if (event.key === "Escape") {
+                instance.close();
+            }
+        };
+        instance.show();
     }
-    const div = document.querySelector('.basicLightbox');
-    div.classList.remove('basicLightbox--visible');
-}
-parentEl.addEventListener('click', onGalleryItem);
-window.addEventListener('keydown', onClickEscape);
+    
+    parentEl.addEventListener('click', onImgContainerClick);
+    
+    // const onGalleryItem = event => {
+    //     if (event.target.nodeName !== 'IMG') {
+    //         return;
+    //     }
+    //     const instance = basicLightbox.create(`
+    //     <img src="${event.target.dataset.source}" width="800" height="600">
+    // `).show()
+    
+    // }
+    
+// const onClickEscape = event => {
+//     if (event.key !== 'Escape') {
+//         return
+//     }
+//     const div = document.querySelector('.basicLightbox');
+//     div.classList.remove('basicLightbox--visible');
+// }
 
+// window.addEventListener('keydown', onClickEscape);
+
+// const instance = basicLightbox.create(
+// `<img class='${event.target.dataset.source}' width="800" height="600">`,
+// {
+// onShow: (instance) => {
+// window.addEventListener("keydown", onKeydown);
+// },
+// onClose: (instance) => {
+// window.removeEventListener("keydown", onKeydown);
+// },
+// }
+// );

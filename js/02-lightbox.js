@@ -9,4 +9,4 @@ const markup = galleryItems.map(({ preview, original, description }) =>
 
 parentEl.innerHTML = markup;
 
-let lightbox =  new SimpleLightbox('.gallery a', { /* options */ });
+let lightbox =  new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250, captionPosition: 'bottom', });
